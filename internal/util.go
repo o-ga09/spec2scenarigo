@@ -216,7 +216,7 @@ func GenScenario(apiSpec *APISpec, outputFileName string, opts ...interface{}) e
 	}
 
 	// シナリオファイルを作成
-	f, err := os.Create(outputFileName)
+	f, err := os.Create(outputFileName) // #nosec G304 -- path comes from CLI argument supplied by the user
 	if err != nil {
 		return errors.New("Scenario file cannot create")
 	}
@@ -276,7 +276,7 @@ func GetResponse(url string, query any, method string) (any, error) {
 func AddParam(intpufile string) (*map[string]addParam, error) {
 	param := make(map[string]addParam)
 
-	f, err := os.Open(intpufile)
+	f, err := os.Open(intpufile) // #nosec G304 -- path comes from CLI argument supplied by the user
 	if err != nil {
 		return nil, err
 	}
