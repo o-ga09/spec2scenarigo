@@ -16,6 +16,13 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+func typeString(t *openapi3.Types) string {
+	if t == nil {
+		return ""
+	}
+	return strings.Join(*t, ",")
+}
+
 func GenItem(inputFileName string, cases []string) (*APISpec, error) {
 	// パス毎の構造体を格納するスライスを定義
 	var apiSpec APISpec
@@ -65,7 +72,7 @@ func GenItem(inputFileName string, cases []string) (*APISpec, error) {
 						// フィールドの名前
 						Name: q.Value.Name,
 						// フィールドの型
-						Type: q.Value.Schema.Value.Type,
+						Type: typeString(q.Value.Schema.Value.Type),
 						// フィールドのサンプル値
 						Example: q.Value.Example,
 					})
@@ -81,7 +88,7 @@ func GenItem(inputFileName string, cases []string) (*APISpec, error) {
 						// フィールドの名前
 						Name: name,
 						// フィールドの型
-						Type: b.Value.Type,
+						Type: typeString(b.Value.Type),
 						// フィールドのサンプル値
 						Example: b.Value.Example,
 					})

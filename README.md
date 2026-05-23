@@ -1,64 +1,118 @@
 # spec2scenarigo
 
-## 概要／Overview
+A CLI tool that generates [scenarigo](https://github.com/zoncoen/scenarigo) E2E test scenario YAML files from OpenAPI Spec files.
 
-本CLIは、OpenAPIからScenarigoのテストシナリオを生成するためのツールです。
+It makes real HTTP requests to your API, captures the responses, and writes a `scenario.yml` ready to use as scenarigo test input.
 
-## インストール／Install
+## Installation
 
 ```bash
-$ go install github.com/o-ga09/spec2scenarigo@v0.0.1
+go install github.com/o-ga09/spec2scenarigo@latest
 ```
 
-## 使い方／Usage
+## Usage
 
-- ```csv-file```：OpenAPI Specのパラメータを指定したくない場合に、パラメーターを別途指定するcsvファイル
-  - ヘッダなし
-  - カラムの順序は、テスト対象パス（文字列）、HTTPメソッド（文字列）
-  - テスト対象パスに、パスパラメーターやクエリパラメーターを含む
+```bash
+spec2scenarigo [input file] [flags]
+```
+
+**Minimal example:**
+
+```bash
+export API_KEY=your_api_key
+spec2scenarigo example/input.yml
+```
+
+**With options:**
+
+```bash
+spec2scenarigo example/input.yml \
+  -s https://api.example.com \
+  -c example/param.csv \
+  -o output/scenario.yml \
+  -t 200,404
+```
+
+### Flags
+
+| Flag | Short | Description |
+|---|---|---|
+| `--csv-file` | `-c` | CSV file to override path/query parameters |
+| `--dry-run` | `-d` | Print parsed spec to stdout without generating a file |
+| `--host` | `-s` | API base URL (defaults to `servers[0].URL` in the spec) |
+| `--output-file` | `-o` | Output filename (default: `scenario.yml`) |
+| `--test-case` | `-t` | Comma-separated HTTP status codes to include (e.g. `200,404`) |
+
+## Authentication
+
+Only `x-api-key` header authentication is supported. Set the key via the `API_KEY` environment variable:
+
+```bash
+export API_KEY=your_api_key
+```
+
+The generated scenario references it as `{{ env.API_KEY }}`.
+
+## CSV Parameter Override
+
+When the parameter definitions in the OpenAPI Spec are insufficient (e.g. path parameters need concrete values), you can supply them via a CSV file.
+
+- No header row
+- Column order: `path(?query_string)`, `HTTP method`, `request body (not yet implemented)`
 
 ```csv
-/v1/health/xxxxx?companyname=xxxxxx&company=yyyyyyy,GET,
-/v1/company/000000/project/1729712947901?user=xxxxxx,GET
-/v1/user/000000?company=xxxxxx,GET
+/v1/health?userId=2222&companyId=xxxxx,GET,
+/v1/user/000000?company=xxxxxx,GET,
 ```
 
+Paths with parameters like `{id}` in the spec are matched against CSV paths using wildcard segment matching.
 
-- ```dry-run```：シナリオファイルの生成なしに、デバッグ可能にする
-- ```host```：APIサーバのURL(OpenAPI Specに複数指定されている場合に、一番最初の要素のURLが使用される仕様のため)
-  - 現在のバージョンでは、```x-api-key```のみ認証を通過できます
-  - ```export API_KEY=xxx```を設定する必要があります。
-- ```output-file```：シナリオのファイル名を指定可能
-- ```test-case```： ```200```、```404```、```400```、```500```といったHTTPステータス毎にテストシナリオを生成できる。
+## Output Example
+
+Scenario generated from `example/input.yml`:
+
+```yaml
+title: MH-API
+vars:
+  endpoint: http://localhost:8080
+steps:
+- title: Health check endpoint
+  protocol: http
+  request:
+    method: GET
+    url: '{{ vars.endpoint }}/v1/health'
+    query:
+      userId: "2222"
+      companyId: xxxxx
+    header:
+      x-api-key: '{{ env.API_KEY }}'
+  expect:
+    code: 200
+    body:
+      message: ok
+```
+
+## Development
 
 ```bash
-Usage:
-  spec2scenarigo [input file] [flags]
+# Build
+go build -o spec2scenarigo .
 
-Flags:
-  -c, --csv-file string      add test pattern parameter
-  -d, --dry-run              dry run mode. not generate scenario file
-  -h, --help                 Help message
-  -s, --host string          API EndPoint
-  -o, --output-file string   output file name
-  -t, --test-case string     determine use test case
-  -v, --version              version for go-spec-to-scenarigo
+# Run tests
+go test ./...
+
+# Run tests with coverage
+go test ./... -coverprofile=coverage.out
+
+# Dry run (no file generated)
+go run . example/input.yml --dry-run
+
+# Run with CSV parameter override
+go run . example/input.yml -c example/param.csv -s https://api.example.com -o output.yml
 ```
 
+## Roadmap
 
-
-## 特徴／Features
-
-- テスト対象のAPIのレスポンスを使用して、シナリオを生成する
-- パスパラメーターや、クエリパラメーターにOpenAPIの記述を使用したくない場合にcsvで別途指定できる
-- ```--dry-run```オプションを指定すると、シナリオファイルの生成なしにOpenAPI Specから値が取得できているかを確認できる
-
-## 注意事項／Caution
-
-- 本ツールは、開発中のため、バグが含まれている可能性があります。また、テストも全て書かれていないので品質については保証いたしかねます。
-
-## 今後の予定／Updates
-
-- [ ] テストを書く
-- [ ] APIをリクエストする認証に対応する（basic認証、Bearer認証、awssigv4）
-- [ ] リクエストボディ（文字列）をcsvで指定できるようにする
+- [ ] Add test cases
+- [ ] Support Basic auth, Bearer token, and AWS Signature V4
+- [ ] Support request body via CSV
