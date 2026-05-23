@@ -23,6 +23,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var version string
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "go-spec-to-scenarigo [input file]",
@@ -31,7 +33,7 @@ var rootCmd = &cobra.Command{
 This CLI tool is used to automatically generate scenarigo test formats from OpenAPI Spec. 
 It generates test expectations with the results of requests to the actual API. 
 			`,
-	Version: "v0.0.6",
+	Version: version,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	PreRun: func(cmd *cobra.Command, args []string) {
@@ -125,7 +127,8 @@ It generates test expectations with the results of requests to the actual API.
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func Execute(v string) {
+	version = v
 	err := rootCmd.Execute()
 	if err != nil {
 		os.Exit(1)

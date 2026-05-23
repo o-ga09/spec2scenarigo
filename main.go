@@ -18,5 +18,5 @@ package main
 import root "github.com/o-ga09/spec2scenarigo/internal"
 
 func main() {
-	root.Execute()
+	root.Execute(Version)
 }

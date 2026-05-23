@@ -1,13 +1,17 @@
 title: MH-API
+vars:
+  endpoint: http://localhost:8080
 steps:
 - title: ヘルスチェックエンドポイント
   protocol: http
   request:
     method: GET
-    url: http://localhost:8080/v1/health
+    url: '{{ vars.endpoint }}/v1/health'
     query:
       companId: xxxxx
       userId: 2222,2222
+    header:
+      x-api-key: '{{ env.API_KEY }}'
   expect:
     code: 200
     body:
