@@ -1,4 +1,8 @@
-# spec2scenarigo
+<p align="center">
+  <img src="assets/logo.png" alt="spec2scenario" width="400">
+</p>
+
+# spec2scenario
 
 A CLI tool that generates [scenarigo](https://github.com/zoncoen/scenarigo) E2E test scenario YAML files from OpenAPI Spec files.
 
@@ -7,26 +11,26 @@ It makes real HTTP requests to your API, captures the responses, and writes a `s
 ## Installation
 
 ```bash
-go install github.com/o-ga09/spec2scenarigo@latest
+go install github.com/o-ga09/spec2scenario@latest
 ```
 
 ## Usage
 
 ```bash
-spec2scenarigo [input file] [flags]
+spec2scenario [input file] [flags]
 ```
 
 **Minimal example:**
 
 ```bash
 export API_KEY=your_api_key
-spec2scenarigo example/input.yml
+spec2scenario example/input.yml
 ```
 
 **With options:**
 
 ```bash
-spec2scenarigo example/input.yml \
+spec2scenario example/input.yml \
   -s https://api.example.com \
   -c example/param.csv \
   -o output/scenario.yml \
@@ -96,7 +100,7 @@ steps:
 
 ```bash
 # Build
-go build -o spec2scenarigo .
+go build -o spec2scenario .
 
 # Run tests
 go test ./...

@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import root "github.com/o-ga09/spec2scenarigo/internal"
+import root "github.com/o-ga09/spec2scenario/internal"
 
 func main() {
 	root.Execute(Version)
