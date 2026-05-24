@@ -4,6 +4,13 @@
 
 # spec2scenario
 
+[![Test](https://github.com/o-ga09/spec2scenario/actions/workflows/test.yaml/badge.svg)](https://github.com/o-ga09/spec2scenario/actions/workflows/test.yaml)
+[![Lint](https://github.com/o-ga09/spec2scenario/actions/workflows/lint.yaml/badge.svg)](https://github.com/o-ga09/spec2scenario/actions/workflows/lint.yaml)
+[![Security](https://github.com/o-ga09/spec2scenario/actions/workflows/security.yml/badge.svg)](https://github.com/o-ga09/spec2scenario/actions/workflows/security.yml)
+[![Go version](https://img.shields.io/github/go-mod/go-version/o-ga09/spec2scenario)](https://github.com/o-ga09/spec2scenario)
+[![Latest release](https://img.shields.io/github/v/release/o-ga09/spec2scenario)](https://github.com/o-ga09/spec2scenario/releases)
+[![License](https://img.shields.io/github/license/o-ga09/spec2scenario)](https://github.com/o-ga09/spec2scenario/blob/main/LICENSE)
+
 A CLI tool that generates [scenarigo](https://github.com/zoncoen/scenarigo) E2E test scenario YAML files from OpenAPI Spec files.
 
 It makes real HTTP requests to your API, captures the responses, and writes a `scenario.yml` ready to use as scenarigo test input.
