@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/logo.png" alt="spec2scenarigo" width="200">
+</p>
+
 # spec2scenarigo
 
 A CLI tool that generates [scenarigo](https://github.com/zoncoen/scenarigo) E2E test scenario YAML files from OpenAPI Spec files.
