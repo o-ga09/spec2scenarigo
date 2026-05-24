@@ -1,4 +1,4 @@
-module github.com/o-ga09/spec2scenarigo
+module github.com/o-ga09/spec2scenario
 
 go 1.26
 
