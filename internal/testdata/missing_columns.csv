@@ -1,0 +1,3 @@
+"/v1/users",GET,""
+only-one-column
+"/v1/items",POST,"{""name"":""test""}"
