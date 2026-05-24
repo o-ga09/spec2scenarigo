@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo.png" alt="spec2scenarigo" width="200">
+  <img src="assets/logo.png" alt="spec2scenarigo" width="400">
 </p>
 
 # spec2scenarigo
