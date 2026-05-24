@@ -1,0 +1,2 @@
+"/v1/users?userId=123&role=admin",GET,""
+"/v1/items",POST,"{""name"":""test""}"

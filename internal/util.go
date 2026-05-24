@@ -246,11 +246,16 @@ func AddParam(inputFile string) (*map[string]addParam, error) {
 	}
 	defer func() { _ = f.Close() }()
 
-	csvFile, err := csv.NewReader(f).ReadAll()
+	r := csv.NewReader(f)
+	r.FieldsPerRecord = -1
+	csvFile, err := r.ReadAll()
 	if err != nil {
 		return nil, err
 	}
 	for _, record := range csvFile {
+		if len(record) < 2 {
+			continue
+		}
 		query := make(map[string]interface{})
 
 		paths := strings.Split(record[0], "?")
@@ -259,16 +264,22 @@ func AddParam(inputFile string) (*map[string]addParam, error) {
 			queries := strings.Split(paths[1], "&")
 			for _, q := range queries {
 				str := strings.Split(q, "=")
-				p1 := str[0]
-				p2 := str[1]
-				query[p1] = p2
+				if len(str) < 2 {
+					query[str[0]] = ""
+					continue
+				}
+				query[str[0]] = str[1]
 			}
 		}
 
+		body := ""
+		if len(record) >= 3 {
+			body = record[2]
+		}
 		param[path] = addParam{
 			Method: record[1],
 			Query:  query,
-			Body:   record[2],
+			Body:   body,
 		}
 	}
 
